@@ -5,7 +5,7 @@ import styles from "../css/userinfo.module.css";
 import logo from "../assets/Code-Editor-Logo.png";
 import Cookies from "js-cookie";
 import axios from "axios";
-import Loading from "../components/Loading";
+// import Loading from "../components/Loading";
 
 const UserInfo = () => {
   const [step, setStep] = useState(1);
@@ -15,13 +15,12 @@ const UserInfo = () => {
   const [company, setCompany] = useState("");
   const [userId, setUserId] = useState("");
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const getUser = async () => {
     try {
-      setIsLoading(true);
       const urlParams = new URLSearchParams(window.location.search);
       const user = JSON.parse(urlParams.get("user"));
       // console.log("user: ", user)
@@ -30,22 +29,15 @@ const UserInfo = () => {
       //   withCredentials: true,
       // });
       if (Object.keys(user).length === 0) {
-        if (
-          user?.username &&
-          user.username !== user.email
-        ) {
+        if (user?.username && user.username !== user.email) {
           if (
             user.user_type === "student" ||
             user.user_type === "working_professional"
           ) {
-            if (
-              !user?.institution &&
-              !user?.company
-            ) {
+            if (!user?.institution && !user?.company) {
               setUsername(user.username);
               setUserType(user.user_type);
               setStep(3);
-              setIsLoading(false);
             } else {
               Cookies.set("sessionData", JSON.stringify(user), {
                 path: "/",
@@ -58,7 +50,6 @@ const UserInfo = () => {
           } else {
             setUsername(user.username);
             setStep(2);
-            setIsLoading(false);
           }
         }
         Cookies.set("sessionId", user._id, {
@@ -68,14 +59,12 @@ const UserInfo = () => {
         });
         setUsername(user.email);
         setUserId(user._id);
-        setIsLoading(false);
       }
     } catch (error) {
       const id = Cookies.get("sessionId");
       if (id) {
         setUsername("your email");
         setUserId(id);
-        setIsLoading(false);
       } else {
         console.log("error", error);
         navigate("/");
@@ -135,9 +124,9 @@ const UserInfo = () => {
     }
   };
 
-  if (isLoading) {
-    return <Loading isDarkMode={false} />;
-  }
+  // if (isLoading) {
+  //   return <Loading isDarkMode={false} />;
+  // }
 
   return (
     <div className={styles["username-creation-container"]}>
