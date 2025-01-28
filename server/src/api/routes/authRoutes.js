@@ -16,19 +16,15 @@ router.get(
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
+// Google callback route with custom callback function
 router.get(
   "/google/callback",
-  passport.authenticate("google", (err, user, info) => {
-    if (err || !user) {
-      return res.redirect(`${process.env.FRONTEND_URI}/login`);
-    }
-
-    // You can use the user information here
-    const userString = encodeURIComponent(JSON.stringify(user));
-
-    // Redirect with user info as a query parameter (careful with sensitive data)
-    return res.redirect(`${process.env.FRONTEND_URI}/userinfo?user=${userString}`);
-  })
+  passport.authenticate("google", { failureRedirect: `${process.env.FRONTEND_URI}/login` }),
+  (req, res) => {
+    // If authentication is successful, redirect with user info
+    const userString = encodeURIComponent(JSON.stringify(req.user)); // Get the user info from req.user
+    res.redirect(`${process.env.FRONTEND_URI}/userinfo?user=${userString}`); // Redirect to /userinfo with user data
+  }
 );
 
 router.get("/login/success", authSuccess);
