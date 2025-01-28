@@ -34,6 +34,11 @@ app.use(
       mongoUrl: process.env.MONGODB_URI,
       touchAfter: 24 * 3600,
     }),
+    cookie: {
+      secure: process.env.NODE_ENV === "production",  // Secure cookies only in production
+      httpOnly: true,
+      sameSite: "lax",
+    },
   })
 );
 
