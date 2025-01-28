@@ -22,50 +22,59 @@ const UserInfo = () => {
   const getUser = async () => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
-      const user = JSON.parse(urlParams.get("user"));
-
-      // Check if user data is available and not empty
-      if (Object.keys(user).length > 0) {
-        // If the user has a username and it is different from the email
-        if (user?.username && user.username !== user.email) {
-          // Handle cases based on user type
-          if (
-            user.user_type === "student" ||
-            user.user_type === "working_professional"
-          ) {
-            // If user does not have institution or company, set to step 3
-            if (!user?.institution && !user?.company) {
-              setUsername(user.username);
-              setUserType(user.user_type);
-              setStep(3); // Go to step 3
+      const userId = urlParams.get("id");
+  
+      // Check if userId exists in the URL
+      if (userId) {
+        const response = await axios.get(`${apiUrl}/api/user/user-details`, {
+          params: {
+            id: userId,
+          },
+        });
+  
+        const user = response.data.user;
+  
+        if (user) {
+          // If the user has a username and it is different from the email
+          if (user?.username && user.username !== user.email) {
+            if (user.user_type === "student" || user.user_type === "working_professional") {
+              // If the user does not have an institution or company, set to step 3
+              if (!user?.institution && !user?.company) {
+                setUsername(user.username);
+                setUserType(user.user_type);
+                setStep(3); // Go to step 3
+              } else {
+                // Store session data in cookies and redirect to dashboard
+                Cookies.set("sessionData", JSON.stringify(user), {
+                  path: "/",
+                  secure: true,
+                  expires: 1,
+                });
+                navigate("/dashboard");
+              }
             } else {
-              // Store session data in cookies and redirect to dashboard
-              Cookies.set("sessionData", JSON.stringify(user), {
-                path: "/",
-                secure: true,
-                expires: 1,
-              });
-              navigate("/dashboard");
+              // If the user type is not student or working professional, go to step 2
+              setUsername(user.username);
+              setStep(2); // Go to step 2
             }
           } else {
-            // If the user type is not student or working professional, go to step 2
-            setUsername(user.username);
-            setStep(2); // Go to step 2
+            // If the user has no username or username is the same as email
+            // Store session data in cookies and proceed with step 1
+            Cookies.set("sessionId", user._id, {
+              path: "/",
+              secure: true,
+              expires: 1,
+            });
+            setUsername(user.email);
+            setUserId(user._id);
+            setStep(1); // Go to step 1
           }
         } else {
-          // If user has no username or username is the same as email
-          // Store session data in cookies and proceed with step 1
-          Cookies.set("sessionId", user._id, {
-            path: "/",
-            secure: true,
-            expires: 1,
-          });
-          setUsername(user.email);
-          setUserId(user._id);
-          setStep(1); // Go to step 1
+          console.log("Error: User data not found");
+          navigate("/"); // Redirect to home page if no user data is found
         }
       } else {
-        // If no user data exists, try using sessionId from cookies
+        // If no userId in the URL, try using sessionId from cookies
         const id = Cookies.get("sessionId");
         if (id) {
           setUsername("your email");
@@ -76,11 +85,11 @@ const UserInfo = () => {
         }
       }
     } catch (error) {
-      // Handle error if JSON parsing fails or something else goes wrong
+      // Handle error if the API call fails or something else goes wrong
       console.log("Error parsing user data:", error);
       navigate("/"); // Redirect to home page on error
     }
-  };
+  };  
 
   useEffect(() => {
     getUser();
