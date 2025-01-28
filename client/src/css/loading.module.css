@@ -1,0 +1,28 @@
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+  transition: background-color 0.3s ease;
+}
+
+.loadingText {
+  margin-top: 20px;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.dark {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.dark .loadingText {
+  color: #fff;
+}

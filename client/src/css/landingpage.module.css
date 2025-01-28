@@ -1,0 +1,97 @@
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("../assets/landingpage.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  position: relative;
+}
+
+.title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 10rem;
+  color: #333;
+  margin-bottom: 2rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.3;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+  transform-origin: center center;
+}
+
+.button {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 0.75rem 2rem;
+  font-size: 1.125rem;
+  border: 2px solid #333;
+  border-radius: 9999px;
+  background: transparent;
+  color: #333;
+  cursor: pointer;
+  transition: all 0s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button:hover {
+  background: #333;
+  color: white;
+}
+
+.revealed {
+  height: 75%;
+  width: 75%;
+  background: rgba(255, 255, 255, 0);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.revealed_title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 4rem;
+  color: #333;
+  margin-bottom: 2rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+
+  .revealed_title {
+    font-size: 2rem;
+  }
+
+  .button {
+    font-size: 1rem;
+    padding: 0.5rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .revealed_title {
+    font-size: 1.5rem;
+  }
+}

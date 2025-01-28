@@ -1,0 +1,96 @@
+.navbar-box {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #d3d3d3;
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.center-section {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.app-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+.theme-icon {
+  font-size: 24px;
+  color: #333;
+  transition: color 0.2s ease-in-out;
+}
+
+.logout-icon {
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.2s ease-in-out;
+}
+
+.logout-icon:hover {
+  color: #ff4d4f;
+}
+
+.navbar-box.dark {
+  background-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+.dark .user-name,
+.dark .app-title,
+.dark .theme-icon,
+.dark .logout-icon {
+  color: #f0f0f0;
+}
+
+.dark .logout-icon:hover {
+  color: #ff7875;
+}
