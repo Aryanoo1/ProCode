@@ -24,30 +24,30 @@ const UserInfo = () => {
       setIsLoading(true);
       const urlParams = new URLSearchParams(window.location.search);
       const user = JSON.parse(urlParams.get("user"));
-      console.log("user: ", user)
+      // console.log("user: ", user)
 
-      const response = await axios.get(`${apiUrl}/auth/login/success`, {
-        withCredentials: true,
-      });
-      if (response.status === 200) {
+      // const response = await axios.get(`${apiUrl}/auth/login/success`, {
+      //   withCredentials: true,
+      // });
+      if (Object.keys(user).length === 0) {
         if (
-          response.data.user?.username &&
-          response.data.user.username !== response.data.user.email
+          user?.username &&
+          user.username !== user.email
         ) {
           if (
-            response.data.user.user_type === "student" ||
-            response.data.user.user_type === "working_professional"
+            user.user_type === "student" ||
+            user.user_type === "working_professional"
           ) {
             if (
-              !response.data.user?.institution &&
-              !response.data.user?.company
+              !user?.institution &&
+              !user?.company
             ) {
-              setUsername(response.data.user.username);
-              setUserType(response.data.user.user_type);
+              setUsername(user.username);
+              setUserType(user.user_type);
               setStep(3);
               setIsLoading(false);
             } else {
-              Cookies.set("sessionData", JSON.stringify(response.data.user), {
+              Cookies.set("sessionData", JSON.stringify(user), {
                 path: "/",
                 secure: true,
                 expires: 1,
@@ -56,18 +56,18 @@ const UserInfo = () => {
               navigate("/dashboard");
             }
           } else {
-            setUsername(response.data.user.username);
+            setUsername(user.username);
             setStep(2);
             setIsLoading(false);
           }
         }
-        Cookies.set("sessionId", response.data.user._id, {
+        Cookies.set("sessionId", user._id, {
           path: "/",
           secure: true,
           expires: 1,
         });
-        setUsername(response.data.user.email);
-        setUserId(response.data.user._id);
+        setUsername(user.email);
+        setUserId(user._id);
         setIsLoading(false);
       }
     } catch (error) {
