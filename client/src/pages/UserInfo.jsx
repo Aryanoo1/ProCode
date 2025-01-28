@@ -22,6 +22,10 @@ const UserInfo = () => {
   const getUser = async () => {
     try {
       setIsLoading(true);
+      const urlParams = new URLSearchParams(window.location.search);
+      const user = JSON.parse(urlParams.get("user"));
+      console.log("user: ", user)
+
       const response = await axios.get(`${apiUrl}/auth/login/success`, {
         withCredentials: true,
       });
