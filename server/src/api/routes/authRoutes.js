@@ -18,9 +18,16 @@ router.get(
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", {
-    successRedirect: `${process.env.FRONTEND_URI}/userinfo?user=${JSON.stringify(req.user)}`,
-    failureRedirect: `${process.env.FRONTEND_URI}/login`,
+  passport.authenticate("google", (err, user, info) => {
+    if (err || !user) {
+      return res.redirect(`${process.env.FRONTEND_URI}/login`);
+    }
+
+    // You can use the user information here
+    const userString = encodeURIComponent(JSON.stringify(user));
+
+    // Redirect with user info as a query parameter (careful with sensitive data)
+    return res.redirect(`${process.env.FRONTEND_URI}/userinfo?user=${userString}`);
   })
 );
 
