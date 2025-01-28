@@ -5,7 +5,7 @@ dotenv.config();
 
 export const authSuccess = (req, res) => {
   console.log("reached authsuccess...")
-  console.log("req : ", req)
+  console.log("req : ", req.session)
   console.log("req user: ", req.user);
   if (req.user) {
     res

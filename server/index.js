@@ -26,7 +26,7 @@ app.use(
 
 app.use(express.json());
 
-app.set("trust proxy", 1); // Trust the first proxy
+// app.set("trust proxy", 1); // Trust the first proxy
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
