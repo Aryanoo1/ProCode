@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const authSuccess = (req, res) => {
+  console.log("reached authsuccess...")
+  console.log("req user: ", req.user);
   if (req.user) {
     res
       .status(200)
