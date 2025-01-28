@@ -32,13 +32,17 @@ passport.use(
     }
   )
 );
-
 passport.serializeUser((user, done) => {
-  done(null, user);
+  console.log("Serializing user:", user);
+  done(null, user.id);
 });
 
-passport.deserializeUser((user, done) => {
-  done(null, user);
+passport.deserializeUser((id, done) => {
+  console.log("Deserializing user ID:", id);
+  // Fetch user from DB
+  User.findById(id, (err, user) => {
+    done(err, user);
+  });
 });
 
 export default passport;
