@@ -266,6 +266,7 @@
   .pie-chart-container {
     flex-direction: row;
     justify-content: space-between;
+    width: 85%;
   }
 
   .chart-labels {
