@@ -35,7 +35,7 @@ const Login = () => {
           secure: true,
           expires: 1,
         });
-        navigate("/userinfo");
+        navigate(`/userinfo?id=${response.data.user._id}`);
       }
     } catch (error) {
       alert("Invalid Credentials");

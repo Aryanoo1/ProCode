@@ -123,7 +123,7 @@ const Register = () => {
           expires: 1,
         });
 
-        navigate("/userinfo");
+        navigate(`/userinfo?id=${result.userId}`);
       } else {
         const error = await response.json();
         console.error("Error:", error);
