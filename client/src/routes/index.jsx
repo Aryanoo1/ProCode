@@ -6,6 +6,7 @@ import CodeEditorPage from "../pages/CodeEditorPage";
 import Register from "../pages/Register";
 import UserInfo from "../pages/UserInfo";
 import LandingPage from "../pages/LandingPage";
+import PrivacyPolicy from "../pages/PrivacyPolicy";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -30,6 +31,7 @@ const AppRoutes = () => {
     <>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/userinfo" element={<UserInfo />} />
