@@ -190,7 +190,6 @@ const UserInfo = () => {
                   id="username"
                   className={styles["username-creation-input"]}
                   placeholder={`Enter your username (default: ${username})`}
-                  required
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
