@@ -22,6 +22,8 @@ export const saveProject = async (req, res) => {
 
     let resultProject;
 
+    console.log("id: ", id)
+
     if (id) {
       const project = await Project.findById(id);
 
