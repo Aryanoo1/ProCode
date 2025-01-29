@@ -5,7 +5,7 @@ import styles from "../css/userinfo.module.css";
 import logo from "../assets/Code-Editor-Logo.png";
 import Cookies from "js-cookie";
 import axios from "axios";
-// import Loading from "../components/Loading";
+import Loading from "../components/Loading";
 
 const UserInfo = () => {
   const [step, setStep] = useState(1);
@@ -15,81 +15,78 @@ const UserInfo = () => {
   const [company, setCompany] = useState("");
   const [userId, setUserId] = useState("");
   const navigate = useNavigate();
-  // const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const getUser = async () => {
     try {
+      setIsLoading(true);
       const urlParams = new URLSearchParams(window.location.search);
       const userId = urlParams.get("id");
-  
+
       // Check if userId exists in the URL
+      let response = {};
       if (userId) {
-        const response = await axios.get(`${apiUrl}/api/user/user-details`, {
+        response = await axios.get(`${apiUrl}/api/user/user-details`, {
           params: {
             id: userId,
           },
         });
-  
-        const user = response.data.user;
-  
-        if (user) {
-          // If the user has a username and it is different from the email
-          if (user?.username && user.username !== user.email) {
-            if (user.user_type === "student" || user.user_type === "working_professional") {
-              // If the user does not have an institution or company, set to step 3
-              if (!user?.institution && !user?.company) {
-                setUsername(user.username);
-                setUserType(user.user_type);
-                setStep(3); // Go to step 3
+        if (response.status === 200) {
+          if (
+            response.data.user?.username &&
+            response.data.user.username !== response.data.user.email
+          ) {
+            if (
+              response.data.user.user_type === "student" ||
+              response.data.user.user_type === "working_professional"
+            ) {
+              if (
+                !response.data.user?.institution &&
+                !response.data.user?.company
+              ) {
+                setUsername(response.data.user.username);
+                setUserType(response.data.user.user_type);
+                setStep(3);
+                setIsLoading(false);
               } else {
-                // Store session data in cookies and redirect to dashboard
-                Cookies.set("sessionData", JSON.stringify(user), {
+                Cookies.set("sessionData", JSON.stringify(response.data.user), {
                   path: "/",
                   secure: true,
                   expires: 1,
                 });
+
                 navigate("/dashboard");
               }
             } else {
-              // If the user type is not student or working professional, go to step 2
-              setUsername(user.username);
-              setStep(2); // Go to step 2
+              setUsername(response.data.user.username);
+              setStep(2);
+              setIsLoading(false);
             }
-          } else {
-            // If the user has no username or username is the same as email
-            // Store session data in cookies and proceed with step 1
-            Cookies.set("sessionId", user._id, {
-              path: "/",
-              secure: true,
-              expires: 1,
-            });
-            setUsername(user.email);
-            setUserId(user._id);
-            setStep(1); // Go to step 1
           }
-        } else {
-          console.log("Error: User data not found");
-          navigate("/"); // Redirect to home page if no user data is found
-        }
-      } else {
-        // If no userId in the URL, try using sessionId from cookies
-        const id = Cookies.get("sessionId");
-        if (id) {
-          setUsername("your email");
-          setUserId(id);
-        } else {
-          console.log("Error: User data not available");
-          navigate("/"); // Redirect to home page if no sessionId is found
+          Cookies.set("sessionId", response.data.user._id, {
+            path: "/",
+            secure: true,
+            expires: 1,
+          });
+          setUsername(response.data.user.email);
+          setUserId(response.data.user._id);
+          setIsLoading(false);
         }
       }
     } catch (error) {
-      // Handle error if the API call fails or something else goes wrong
-      console.log("Error parsing user data:", error);
-      navigate("/"); // Redirect to home page on error
+      const id = Cookies.get("sessionId");
+      if (id) {
+        setUsername("your email");
+        setUserId(id);
+        setIsLoading(false);
+      } else {
+        console.log("error", error);
+        navigate("/");
+      }
     }
-  };  
+  };
 
   useEffect(() => {
     getUser();
@@ -143,9 +140,9 @@ const UserInfo = () => {
     }
   };
 
-  // if (isLoading) {
-  //   return <Loading isDarkMode={false} />;
-  // }
+  if (isLoading) {
+    return <Loading isDarkMode={false} />;
+  }
 
   return (
     <div className={styles["username-creation-container"]}>
