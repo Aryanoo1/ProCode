@@ -28,7 +28,7 @@ const UserInfo = () => {
       // Check if userId exists in the URL
       let response = {};
       if (userId) {
-        response = await axios.get(`${apiUrl}/api/user/user-details`, {
+        response = await axios.get(`${apiUrl}/api/users/user-details`, {
           params: {
             id: userId,
           },
