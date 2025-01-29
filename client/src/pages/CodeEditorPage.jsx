@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react"
-import { Navigate, useLocation, useNavigate } from "react-router-dom"
-import { Button, Tabs, Tab, Paper, Typography, Box } from "@mui/material"
-import CodeMirror from "@uiw/react-codemirror"
-import { java } from "@codemirror/lang-java"
-import { python } from "@codemirror/lang-python"
-import { cpp } from "@codemirror/lang-cpp"
-import { html } from "@codemirror/lang-html"
-import { css } from "@codemirror/lang-css"
-import { javascript } from "@codemirror/lang-javascript"
-import { dracula } from "@uiw/codemirror-theme-dracula"
-import { autocompletion } from "@codemirror/autocomplete"
-import { basicSetup } from "@codemirror/basic-setup"
-import styles from "../css/codeeditorpage.module.css"
-import Cookies from "js-cookie"
-import Loading from "../components/Loading"
+import React, { useState, useEffect } from "react";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Button, Tabs, Tab, Paper, Typography, Box } from "@mui/material";
+import CodeMirror from "@uiw/react-codemirror";
+import { java } from "@codemirror/lang-java";
+import { python } from "@codemirror/lang-python";
+import { cpp } from "@codemirror/lang-cpp";
+import { html } from "@codemirror/lang-html";
+import { css } from "@codemirror/lang-css";
+import { javascript } from "@codemirror/lang-javascript";
+import { dracula } from "@uiw/codemirror-theme-dracula";
+import { autocompletion } from "@codemirror/autocomplete";
+import { basicSetup } from "@codemirror/basic-setup";
+import styles from "../css/codeeditorpage.module.css";
+import Cookies from "js-cookie";
+import Loading from "../components/Loading";
 
 const boilerplateCode = {
   Java: `public class Main {
@@ -61,7 +61,7 @@ background-color: #f0f0f0;
 }`,
     js: `console.log("JavaScript is running!");`,
   },
-}
+};
 
 const languageExtensions = {
   Java: [java(), autocompletion()],
@@ -70,66 +70,68 @@ const languageExtensions = {
   "C++": [cpp(), autocompletion()],
   JavaScript: [javascript(), autocompletion()],
   Web: [html(), css(), javascript(), autocompletion()],
-}
+};
 
 const CodeEditorPage = ({ isDarkMode, toggleTheme }) => {
-  const userString = Cookies.get("sessionData")
-  let user = null
-  const location = useLocation()
-  const navigate = useNavigate()
+  const userString = Cookies.get("sessionData");
+  let user = null;
+  const location = useLocation();
+  const navigate = useNavigate();
 
   try {
     if (userString === "[object Object]") {
-      console.error("Session data was improperly stored")
-      return <Navigate to="/login" />
+      console.error("Session data was improperly stored");
+      return <Navigate to="/login" />;
     }
-    user = userString ? JSON.parse(userString) : null
+    user = userString ? JSON.parse(userString) : null;
   } catch (error) {
-    console.error("Error parsing user data:", error)
-    return <Navigate to="/login" />
+    console.error("Error parsing user data:", error);
+    return <Navigate to="/login" />;
   }
 
   if (!user) {
-    return <Navigate to="/" />
+    return <Navigate to="/" />;
   }
-  const { language, initialData, userId, newSave } = location.state || {}
+  const { language, initialData, userId, newSave } = location.state || {};
 
-  const apiUrl = import.meta.env.VITE_API_URL
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-  const isWebDev = language === "Web"
+  const isWebDev = language === "Web";
 
-  const [code, setCode] = useState(isWebDev ? { html: "", css: "", js: "" } : "")
-  const [projectName, setProjectName] = useState(initialData?.name || "")
-  const [activeTab, setActiveTab] = useState("html")
-  const [output, setOutput] = useState("")
-  const [input, setInput] = useState("")
-  const [isLoading, setIsLoading] = useState(true)
-  const [isCodeLoading, setIsCodeLoading] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
-  const [projectId, setProjectId] = useState(initialData?._id || null)
+  const [code, setCode] = useState(
+    isWebDev ? { html: "", css: "", js: "" } : ""
+  );
+  const [projectName, setProjectName] = useState(initialData?.name || "");
+  const [activeTab, setActiveTab] = useState("html");
+  const [output, setOutput] = useState("");
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCodeLoading, setIsCodeLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [projectId, setProjectId] = useState(initialData?._id || null);
 
   useEffect(() => {
     if (initialData) {
-      setCode(isWebDev ? initialData.code : initialData.code.main)
-      setProjectName(initialData.name)
+      setCode(isWebDev ? initialData.code : initialData.code.main);
+      setProjectName(initialData.name);
     } else {
-      setCode(isWebDev ? boilerplateCode.Web : boilerplateCode[language])
+      setCode(isWebDev ? boilerplateCode.Web : boilerplateCode[language]);
     }
-    setIsLoading(false)
-  }, [initialData, language, isWebDev])
+    setIsLoading(false);
+  }, [initialData, language, isWebDev]);
 
   const handleSave = async (silent = false) => {
     if (!projectName.trim()) {
-      alert("Please enter a project name.")
-      return
+      alert("Please enter a project name.");
+      return;
     }
 
     if (isSaving) {
-      console.log("Save operation already in progress")
-      return
+      console.log("Save operation already in progress");
+      return;
     }
 
-    setIsSaving(true)
+    setIsSaving(true);
 
     const project = {
       id: projectId,
@@ -137,52 +139,54 @@ const CodeEditorPage = ({ isDarkMode, toggleTheme }) => {
       language,
       code: isWebDev ? code : { main: code },
       userId,
-    }
+    };
+
+    console.log("project id sent: ", project.id);
 
     try {
       const response = await fetch(`${apiUrl}/api/code/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(project),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error("Failed to save project")
+        throw new Error("Failed to save project");
       }
 
-      const savedProject = await response.json()
-      setProjectId(savedProject._id)
+      const savedProject = await response.json();
+      setProjectId(savedProject._id);
       if (!silent) {
-        alert("Project saved successfully!")
+        alert("Project saved successfully!");
       }
     } catch (err) {
-      console.error(err)
+      console.error(err);
       if (!silent) {
-        alert("An error occurred while saving the project.")
+        alert("An error occurred while saving the project.");
       }
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handleRun = async () => {
     if (projectName === "") {
-      alert("Please name the project first.")
-      return
+      alert("Please name the project first.");
+      return;
     }
 
     if (isSaving) {
-      alert("Please wait for the current save operation to complete.")
-      return
+      alert("Please wait for the current save operation to complete.");
+      return;
     }
 
-    setIsCodeLoading(true)
-    setOutput("")
+    setIsCodeLoading(true);
+    setOutput("");
 
-    await handleSave(true)
+    await handleSave(true);
 
     if (isWebDev) {
-      const iframe = document.getElementById("web-preview")
+      const iframe = document.getElementById("web-preview");
       if (iframe) {
         const htmlContent = `<!DOCTYPE html>
 <html>
@@ -193,8 +197,8 @@ const CodeEditorPage = ({ isDarkMode, toggleTheme }) => {
 ${code.html}
 <script>${code.js}</script>
 </body>
-</html>`
-        iframe.srcdoc = htmlContent
+</html>`;
+        iframe.srcdoc = htmlContent;
       }
     } else {
       try {
@@ -202,13 +206,13 @@ ${code.html}
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ language, code, input }),
-        })
+        });
 
-        const data = await response.json()
+        const data = await response.json();
         if (response.ok) {
-          setOutput(data.output)
+          setOutput(data.output);
         } else {
-          setOutput("An error occurred while running the code.")
+          setOutput("An error occurred while running the code.");
         }
 
         await fetch(`${apiUrl}/api/activity/${userId}`, {
@@ -218,31 +222,38 @@ ${code.html}
             date: new Date().toISOString().split("T")[0],
             runs: 1,
           }),
-        })
+        });
       } catch (err) {
-        console.error(err)
-        setOutput("An error occurred while connecting to the server.")
+        console.error(err);
+        setOutput("An error occurred while connecting to the server.");
       }
     }
 
-    setIsCodeLoading(false)
-  }
+    setIsCodeLoading(false);
+  };
 
   const handleReturn = () => {
-    navigate("/dashboard")
-  }
+    navigate("/dashboard");
+  };
 
-  const extensions = [...(languageExtensions[language] || [basicSetup])]
+  const extensions = [...(languageExtensions[language] || [basicSetup])];
 
   if (isLoading) {
-    return <Loading isDarkMode={isDarkMode} />
+    return <Loading isDarkMode={isDarkMode} />;
   }
 
   return (
-    <Box className={`${styles["code-editor-container"]} ${isDarkMode ? styles["dark"] : ""}`}>
+    <Box
+      className={`${styles["code-editor-container"]} ${
+        isDarkMode ? styles["dark"] : ""
+      }`}
+    >
       <Box className={styles["header-container"]}>
         <Box className={styles["project-name-container"]}>
-          <Typography variant="subtitle1" sx={{ marginRight: 2, fontSize: "1.2rem" }}>
+          <Typography
+            variant="subtitle1"
+            sx={{ marginRight: 2, fontSize: "1.2rem" }}
+          >
             Project Name:
           </Typography>
           <input
@@ -257,7 +268,11 @@ ${code.html}
           <Button variant="contained" color="primary" onClick={handleRun}>
             Run
           </Button>
-          <Button variant="contained" color="success" onClick={() => handleSave(false)}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => handleSave(false)}
+          >
             Save
           </Button>
           <Button variant="contained" color="secondary" onClick={handleReturn}>
@@ -282,7 +297,9 @@ ${code.html}
                   color: isDarkMode ? "#ffffff" : "#000000",
                 },
                 "& .Mui-selected": {
-                  color: isDarkMode ? "#ffffff !important" : "#000000 !important",
+                  color: isDarkMode
+                    ? "#ffffff !important"
+                    : "#000000 !important",
                 },
               }}
             >
@@ -298,7 +315,11 @@ ${code.html}
               value={isWebDev ? code[activeTab] || "" : code}
               extensions={extensions}
               theme={isDarkMode ? dracula : "light"}
-              onChange={(value) => (isWebDev ? setCode({ ...code, [activeTab]: value }) : setCode(value))}
+              onChange={(value) =>
+                isWebDev
+                  ? setCode({ ...code, [activeTab]: value })
+                  : setCode(value)
+              }
               height="100%"
             />
           </div>
@@ -308,7 +329,11 @@ ${code.html}
       {!isWebDev && (
         <Paper elevation={3} className={styles["output-paper"]}>
           <Box className={styles["input-container"]}>
-            <Typography variant="h6" gutterBottom className={styles["headings"]}>
+            <Typography
+              variant="h6"
+              gutterBottom
+              className={styles["headings"]}
+            >
               Input
             </Typography>
             <textarea
@@ -319,7 +344,11 @@ ${code.html}
             ></textarea>
           </Box>
           <Box className={styles["output-container"]}>
-            <Typography variant="h6" gutterBottom className={styles["headings"]}>
+            <Typography
+              variant="h6"
+              gutterBottom
+              className={styles["headings"]}
+            >
               Output
             </Typography>
             {isCodeLoading ? (
@@ -339,11 +368,15 @@ ${code.html}
       {isWebDev && (
         <div className={styles["preview-screen"]}>
           <div className={styles["preview-name"]}>Preview</div>
-          <iframe id="web-preview" title="Web Preview" className={styles["web-preview"]}></iframe>
+          <iframe
+            id="web-preview"
+            title="Web Preview"
+            className={styles["web-preview"]}
+          ></iframe>
         </div>
       )}
     </Box>
-  )
-}
+  );
+};
 
-export default CodeEditorPage
+export default CodeEditorPage;
