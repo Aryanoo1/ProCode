@@ -315,19 +315,20 @@ const UserInfo = () => {
           </div>
         )}
       </div>
-
-      <div className={styles["username-creation-footer"]}>
-        <p>
-          Need help?{" "}
-          <a href="#" className={styles["username-creation-link"]}>
-            Contact Us
-          </a>{" "}
-          |{" "}
-          <a href="#" className={styles["username-creation-link"]}>
-            Privacy Policy
-          </a>
-        </p>
-      </div>
+      {step !== 2 && (
+        <div className={styles["username-creation-footer"]}>
+          <p>
+            Need help?{" "}
+            <a href="#" className={styles["username-creation-link"]}>
+              Contact Us
+            </a>{" "}
+            |{" "}
+            <a href="#" className={styles["username-creation-link"]}>
+              Privacy Policy
+            </a>
+          </p>
+        </div>
+      )}
     </div>
   );
 };
