@@ -32,7 +32,7 @@ router.post("/:userId", async (req, res) => {
 
   try {
     const normalizedDate = new Date(date);
-    normalizedDate.setHours(24, 0, 0, 0);
+    normalizedDate.setUTCHours(0, 0, 0, 0)
 
     const activity = await UserActivity.findOneAndUpdate(
       { userId, date: normalizedDate },

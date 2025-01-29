@@ -7,7 +7,7 @@ import { Pie } from "react-chartjs-2";
 import "chart.js/auto";
 import CalendarHeatmap from "react-calendar-heatmap";
 import "react-calendar-heatmap/dist/styles.css";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import Cookies from "js-cookie";
@@ -65,7 +65,7 @@ const Dashboard = ({ isDarkMode, toggleTheme, initialNewSave }) => {
           const activityData = await activityResponse.json();
           const activityMap = new Map(
             activityData.map((item) => [
-              format(new Date(item.date), "yyyy-MM-dd"),
+              format(parseISO(item.date), "yyyy-MM-dd"),
               item.runs,
             ])
           );

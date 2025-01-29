@@ -141,8 +141,6 @@ const CodeEditorPage = ({ isDarkMode, toggleTheme }) => {
       userId,
     };
 
-    console.log("project id sent: ", project.id);
-
     try {
       const response = await fetch(`${apiUrl}/api/code/save`, {
         method: "POST",
@@ -155,7 +153,6 @@ const CodeEditorPage = ({ isDarkMode, toggleTheme }) => {
       }
 
       const savedProject = await response.json();
-      console.log("savedProject coming from back: ", savedProject);
       setProjectId(savedProject.project._id);
       if (!silent) {
         alert("Project saved successfully!");

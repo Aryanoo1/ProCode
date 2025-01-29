@@ -30,7 +30,6 @@ export const getUsers = async (req, res) => {
 export const userDetails = async (req, res) => {
   try {
     const { id } = req.query;
-    console.log("id: ", id)
     const user = await User.findById(id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
