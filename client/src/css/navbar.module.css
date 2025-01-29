@@ -94,3 +94,9 @@
 .dark .logout-icon:hover {
   color: #ff7875;
 }
+
+@media (min-width : 900px) {
+  .user-name {
+    font-size: 0px;
+  }
+}
