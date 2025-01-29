@@ -156,7 +156,7 @@ const CodeEditorPage = ({ isDarkMode, toggleTheme }) => {
 
       const savedProject = await response.json();
       console.log("savedProject coming from back: ", savedProject);
-      setProjectId(savedProject._id);
+      setProjectId(savedProject.project._id);
       if (!silent) {
         alert("Project saved successfully!");
       }
