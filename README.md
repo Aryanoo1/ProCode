@@ -44,7 +44,6 @@ An online coding platform that allows users to write, save, run, and store code 
    MONGO_URI=your_mongodb_uri
    GOOGLE_CLIENT_ID=your_google_client_id
    GOOGLE_CLIENT_SECRET=your_google_client_secret
-   JWT_SECRET=your_jwt_secret
    JDOODLE_CLIENT_ID=your_jdoodle_client_id
    JDOODLE_CLIENT_SECRET=your_jdoodle_client_secret
    ```
